@@ -1,0 +1,68 @@
+package com.lucasleao.clienteservice.controller;
+
+import com.lucasleao.clienteservice.model.Cliente;
+import com.lucasleao.clienteservice.repository.ClienteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/clientes")
+public class ClienteController {
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    // Listar todos os clientes
+    @GetMapping
+    public List<Cliente> listarTodos() {
+        return clienteRepository.findAll();
+    }
+
+    // Buscar cliente por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> buscarPorId(@PathVariable Long id) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Criar novo cliente
+    @PostMapping
+    public Cliente criarCliente(@RequestBody Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    // Atualizar cliente
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente clienteAtualizado) {
+        Optional<Cliente> clienteExistente = clienteRepository.findById(id);
+        if (clienteExistente.isPresent()) {
+            Cliente cliente = clienteExistente.get();
+            cliente.setNome(clienteAtualizado.getNome());
+            cliente.setEmail(clienteAtualizado.getEmail());
+            clienteRepository.save(cliente);
+            return ResponseEntity.ok(cliente);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Deletar cliente
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
+        Optional<Cliente> clienteExistente = clienteRepository.findById(id);
+        if (clienteExistente.isPresent()) {
+            clienteRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}

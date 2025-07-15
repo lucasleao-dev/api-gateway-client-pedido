@@ -1,0 +1,63 @@
+package com.lucasleao.pedidoservice.controller;
+
+import com.lucasleao.pedidoservice.model.Pedido;
+import com.lucasleao.pedidoservice.repository.PedidoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    // Listar todos os pedidos
+    @GetMapping
+    public List<Pedido> listar() {
+        return pedidoRepository.findAll();
+    }
+
+    // Buscar pedido por id
+    @GetMapping("/{id}")
+    public ResponseEntity<Pedido> buscarPorId(@PathVariable Long id) {
+        Optional<Pedido> pedido = pedidoRepository.findById(id);
+        if (pedido.isPresent()) {
+            return ResponseEntity.ok(pedido.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Criar novo pedido
+    @PostMapping
+    public Pedido criar(@RequestBody Pedido pedido) {
+        return pedidoRepository.save(pedido);
+    }
+
+    // Atualizar pedido
+    @PutMapping("/{id}")
+    public ResponseEntity<Pedido> atualizar(@PathVariable Long id, @RequestBody Pedido pedidoAtualizado) {
+        return pedidoRepository.findById(id)
+                .map(pedido -> {
+                    pedido.setDescricao(pedidoAtualizado.getDescricao());
+                    pedido.setValor(pedidoAtualizado.getValor());
+                    Pedido atualizado = pedidoRepository.save(pedido);
+                    return ResponseEntity.ok(atualizado);
+                }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // Deletar pedido
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        return pedidoRepository.findById(id)
+                .map(pedido -> {
+                    pedidoRepository.delete(pedido);
+                    return ResponseEntity.noContent().build();
+                }).orElse(ResponseEntity.notFound().build());
+    }
+}

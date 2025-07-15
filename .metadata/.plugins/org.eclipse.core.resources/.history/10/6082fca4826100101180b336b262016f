@@ -1,0 +1,28 @@
+package com.lucasleao.pedidoservice.controller;
+
+import com.lucasleao.pedidoservice.model.Pedido;
+import com.lucasleao.pedidoservice.repository.PedidoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    @GetMapping
+    public List<Pedido> listarTodos() {
+        return pedidoRepository.findAll();
+    }
+
+    @PostMapping
+    public Pedido criar(@RequestBody Pedido pedido) {
+        return pedidoRepository.save(pedido);
+    }
+
+    // outros endpoints como getById, delete, update, etc., podem ser adicionados
+}

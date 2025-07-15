@@ -1,0 +1,5 @@
+package com.lucasleao.clienteservice.ClienteRepository;
+
+public interface repository {
+
+}

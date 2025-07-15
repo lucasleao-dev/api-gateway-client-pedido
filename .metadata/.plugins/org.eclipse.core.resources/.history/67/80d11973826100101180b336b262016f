@@ -1,0 +1,5 @@
+package com.lucasleao.pedidoservice.controller;
+
+public class PedidoController {
+
+}

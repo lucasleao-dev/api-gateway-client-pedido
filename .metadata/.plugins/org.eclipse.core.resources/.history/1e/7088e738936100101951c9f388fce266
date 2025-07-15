@@ -1,0 +1,5 @@
+package com.lucasleao.clienteservice.config;
+
+public class OpenApiConfig {
+
+}

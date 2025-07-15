@@ -1,0 +1,5 @@
+package com.lucasleao.clienteservice.controlleradvice;
+
+public class GlobalExceptionHandler {
+
+}

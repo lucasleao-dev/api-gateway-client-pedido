@@ -1,0 +1,67 @@
+package com.lucasleao.clienteservice.controller;
+
+import com.lucasleao.clienteservice.model.Cliente;
+import com.lucasleao.clienteservice.repository.ClienteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/clientes")
+public class ClienteController {
+
+    private final ClienteRepository clienteRepository;
+
+    @Autowired
+    public ClienteController(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+    }
+
+    // Buscar todos os clientes
+    @GetMapping
+    public List<Cliente> getAllClientes() {
+        return clienteRepository.findAll();
+    }
+
+    // Buscar cliente por id
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> getClienteById(@PathVariable Long id) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        return cliente.map(ResponseEntity::ok)
+                      .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Criar um novo cliente
+    @PostMapping
+    public Cliente createCliente(@RequestBody Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    // Atualizar cliente
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @RequestBody Cliente clienteDetails) {
+        Optional<Cliente> optionalCliente = clienteRepository.findById(id);
+        if (optionalCliente.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Cliente cliente = optionalCliente.get();
+        cliente.setNome(clienteDetails.getNome());
+        cliente.setEmail(clienteDetails.getEmail());
+        // Atualize outros campos conforme necessário
+        Cliente updatedCliente = clienteRepository.save(cliente);
+        return ResponseEntity.ok(updatedCliente);
+    }
+
+    // Deletar cliente
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
+        if (!clienteRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        clienteRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+}

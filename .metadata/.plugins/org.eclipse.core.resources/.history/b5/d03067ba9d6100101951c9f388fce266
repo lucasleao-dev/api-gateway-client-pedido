@@ -1,0 +1,5 @@
+package com.lucasleao.clienteservice;
+
+public class ApiGatewayApplication {
+
+}

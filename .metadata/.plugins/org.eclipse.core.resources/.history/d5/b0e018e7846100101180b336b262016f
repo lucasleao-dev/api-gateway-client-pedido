@@ -1,0 +1,20 @@
+spring.application.name=pedido-service
+# Mostra as queries SQL simples no console
+
+spring.jpa.show-sql=true
+
+
+spring.jpa.properties.hibernate.format_sql=true
+# Formata o SQL para ficar mais legível
+
+logging.level.org.hibernate.SQL=DEBUG
+# Exibe as queries geradas no nível DEBUG no log
+
+
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+
+# Mostra os valores dos parâmetros nas queries (bind parameters)
+
+
+
+

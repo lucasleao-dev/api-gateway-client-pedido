@@ -1,0 +1,17 @@
+Spring Web – Para criar APIs REST. ok
+
+Spring Boot DevTools – Para facilitar o desenvolvimento com recarga automática. ok
+
+Spring Data JPA – Para interação com o banco de dados (caso vá usar um banco relacional como o PostgreSQL ou MySQL). ok 
+
+Spring Security – Para autenticação e autorização (vai usar para configurar o JWT). ok 
+
+Spring Boot Actuator – Para monitoramento do serviço. não 
+
+JWT (jjwt ou spring-security-jwt) – Para trabalhar com JSON Web Tokens. não 
+
+PostgreSQL Driver (caso use PostgreSQL) – Para conexão com o banco de dados. nao
+
+Test Dependencies – Testes com JUnit, Mockito e Spring Test. não 
+
+Lombok – Para facilitar a escrita de código (gera getters, setters, etc., automaticamente). não 

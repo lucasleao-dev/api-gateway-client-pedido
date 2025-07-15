@@ -1,0 +1,5 @@
+package com.lucasleao.pedidoservice.repository;
+
+public class PedidoRepository {
+
+}

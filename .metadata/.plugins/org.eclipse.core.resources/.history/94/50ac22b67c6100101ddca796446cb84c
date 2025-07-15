@@ -1,0 +1,5 @@
+package com.lucasleao.clienteservice.Controller;
+
+public class ClienteController {
+
+}

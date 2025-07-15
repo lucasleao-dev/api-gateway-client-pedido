@@ -1,0 +1,5 @@
+package com.lucasleao.clienteservice.model;
+
+public class Cliente {
+
+}

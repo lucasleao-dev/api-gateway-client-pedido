@@ -1,0 +1,56 @@
+package com.lucasleao.pedidoservice.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lucasleao.pedidoservice.model.Pedido;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class PedidoControllerIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    public void deveCriarListarEBuscarPedido() throws Exception {
+        // Cria um pedido novo para teste
+        Pedido pedido = new Pedido();
+        pedido.setDescricao("Teste Pedido");
+        pedido.setValor(123.45);
+
+        // Serializa para JSON
+        String pedidoJson = objectMapper.writeValueAsString(pedido);
+
+        // 1. Testa criar pedido (POST /pedidos)
+        mockMvc.perform(post("/pedidos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pedidoJson))
+                .andExpect(status().isOk()) // ou isCreated() se você alterar o controller para retornar 201
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.descricao", is("Teste Pedido")))
+                .andExpect(jsonPath("$.valor", is(123.45)));
+
+        // 2. Testa listar todos pedidos (GET /pedidos)
+        mockMvc.perform(get("/pedidos"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", not(empty())));
+
+        // 3. Testa buscar pedido por id (GET /pedidos/1)
+        mockMvc.perform(get("/pedidos/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.descricao", is("Teste Pedido")))
+                .andExpect(jsonPath("$.valor", is(123.45)));
+    }
+}

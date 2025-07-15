@@ -1,0 +1,61 @@
+package com.lucasleao.pedidoservice.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lucasleao.pedidoservice.model.Pedido;
+import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class PedidoControllerIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    public void deveCriarListarEBuscarPedido() throws Exception {
+        Pedido pedido = new Pedido();
+        pedido.setDescricao("Teste Pedido");
+        pedido.setValor(123.45);
+
+        String pedidoJson = objectMapper.writeValueAsString(pedido);
+
+        // 1. Criar pedido (POST /pedidos)
+        MvcResult result = mockMvc.perform(post("/pedidos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pedidoJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.descricao", is("Teste Pedido")))
+                .andExpect(jsonPath("$.valor", is(123.45)))
+                .andReturn();
+
+        // Extrair o id do pedido criado do JSON da resposta
+        String responseJson = result.getResponse().getContentAsString();
+        Long idCriado = JsonPath.read(responseJson, "$.id");
+
+        // 2. Listar pedidos (GET /pedidos)
+        mockMvc.perform(get("/pedidos"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", not(empty())));
+
+        // 3. Buscar pedido por id criado (GET /pedidos/{id})
+        mockMvc.perform(get("/pedidos/" + idCriado))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.descricao", is("Teste Pedido")))
+                .andExpect(jsonPath("$.valor", is(123.45)));
+    }
+}

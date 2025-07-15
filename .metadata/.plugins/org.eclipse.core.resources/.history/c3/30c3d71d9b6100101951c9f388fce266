@@ -1,0 +1,23 @@
+# Mostrar as consultas SQL geradas pelo Hibernate
+spring.jpa.show-sql=true
+
+# Formatar SQL no log para facilitar leitura
+spring.jpa.properties.hibernate.format_sql=true
+
+# Log de queries SQL
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate=DEBUG
+
+
+# Log dos valores dos parâmetros das queries
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+
+# Configuração do banco H2 em memória
+spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# Criar e dropar as tabelas ao iniciar e parar a aplicação
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.ai.openai.api-key=YOUR_API_KEY

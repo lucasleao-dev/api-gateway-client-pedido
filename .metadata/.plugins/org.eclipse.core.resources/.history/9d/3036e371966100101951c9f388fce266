@@ -1,0 +1,16 @@
+package com.lucasleao.clienteservice.config;
+
+import org.springdoc.core.annotations.RouterOperation;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Cliente Service API").version("1.0"));
+    }
+}
